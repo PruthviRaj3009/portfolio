@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: portfolio_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ../portfolio-backend
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ../portfolio-backend:/app
+    expose:
+      - "8000"
+    depends_on:
+      - db
+    env_file:
+      - ../portfolio-backend/.env
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: /api
+    image: portfolio-frontend:latest
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

@@ -1,0 +1,11 @@
+# Don't copy these into the Docker build context — faster builds, smaller images.
+node_modules
+dist
+build
+.git
+.gitignore
+*.log
+.env.local
+.DS_Store
+Dockerfile
+.dockerignore
