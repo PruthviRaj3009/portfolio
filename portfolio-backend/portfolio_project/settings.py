@@ -1,6 +1,4 @@
 from pathlib import Path
-
-
 from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -88,4 +86,35 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CORS_ALLOW_ALL_ORIGINS = True
+# ── CORS settings ────────────────────────────────────────
+CORS_ALLOW_ALL_ORIGINS = False
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost",
+    "http://localhost:80",
+    "http://localhost:8080",  # full docker setup
+    "http://localhost:5173",  # npm run dev
+    "http://localhost:3000",  # alternative dev port
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:8080",
+]
+
+# ── CSRF settings ─────────────────────────────────────────
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost",
+    "http://localhost:80",
+    "http://localhost:8080",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:8080",
+]
+
+# ── REST Framework settings ───────────────────────────────
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
+    ],
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+    ],
+}
