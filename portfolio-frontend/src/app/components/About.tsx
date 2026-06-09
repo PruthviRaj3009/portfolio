@@ -1,31 +1,50 @@
 import { motion } from "motion/react";
-import { Briefcase, Code2, Star, Award } from "lucide-react";
-
-const stats = [
-  { label: "Projects Done", value: "10+" },
-  { label: "Technologies", value: "15+" },
-  { label: "Experience", value: "2+ Yrs" },
-  { label: "Certifications", value: "8+" },
-];
+import { Briefcase, Code2, Star } from "lucide-react";
+import {
+  useProfile,
+  useProjects,
+  useCertificates,
+} from "../../hooks/usePortfolioData";
 
 const floatingBadges = [
-  { icon: <Briefcase size={14} />, text: "2+ Years Experience", delay: 0 },
-  { icon: <Code2 size={14} />, text: "10+ Projects", delay: 0.3 },
-  { icon: <Star size={14} />, text: "Open to Work", delay: 0.6 },
+  { icon: <Briefcase size={14} />, text: "Open to Work", delay: 0 },
+  { icon: <Code2 size={14} />, text: "Full Stack Dev", delay: 0.3 },
+  { icon: <Star size={14} />, text: "Django Expert", delay: 0.6 },
 ];
 
 export function About() {
+  const { data: profile } = useProfile();
+  const { data: projects } = useProjects();
+  const { data: certificates } = useCertificates();
+
+  const initials = profile?.name
+    ? profile.name
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "PP";
+
+  const stats = [
+    { label: "Projects Done", value: `${projects?.length ?? 0}+` },
+    { label: "Technologies", value: "15+" },
+    { label: "Experience", value: "2+ Yrs" },
+    { label: "Certifications", value: `${certificates?.length ?? 0}+` },
+  ];
+
   return (
     <section id="about" className="py-24" style={{ background: "#0F0F1A" }}>
-      {/* Glow separator */}
       <div
         className="w-full h-px mb-0"
-        style={{ background: "linear-gradient(90deg, transparent, #6C63FF44, #00D4FF44, transparent)" }}
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, #6C63FF44, #00D4FF44, transparent)",
+        }}
       />
-
       <div className="max-w-7xl mx-auto px-6 pt-16">
         <div className="grid md:grid-cols-2 gap-16 items-center">
-          {/* Left: photo + badges */}
+          {/* Left: photo */}
           <motion.div
             className="flex justify-center relative"
             initial={{ opacity: 0, x: -40 }}
@@ -34,51 +53,49 @@ export function About() {
             transition={{ duration: 0.7 }}
           >
             <div className="relative">
-              {/* Hexagon-shaped profile photo using clip-path */}
               <div
                 className="w-56 h-64 md:w-64 md:h-72 relative"
                 style={{
-                  clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                  clipPath:
+                    "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
                   background: "linear-gradient(135deg, #6C63FF, #00D4FF)",
                   padding: "3px",
                 }}
               >
-                <div
-                  className="w-full h-full flex items-center justify-center text-6xl"
-                  style={{
-                    clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                    background: "#13131F",
-                  }}
-                >
-                  <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700 }}>
+                {profile?.profile_image ? (
+                  <img
+                    src={profile.profile_image}
+                    alt={profile.name}
+                    className="w-full h-full object-cover"
+                    style={{
+                      clipPath:
+                        "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                    }}
+                  />
+                ) : (
+                  <div
+                    className="w-full h-full flex items-center justify-center"
+                    style={{
+                      clipPath:
+                        "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                      background: "#13131F",
+                    }}
+                  >
                     <span
                       style={{
+                        fontFamily: "'Space Grotesk', sans-serif",
+                        fontWeight: 700,
                         background: "linear-gradient(135deg, #6C63FF, #00D4FF)",
                         WebkitBackgroundClip: "text",
                         WebkitTextFillColor: "transparent",
                         fontSize: "3rem",
                       }}
                     >
-                      PP
+                      {initials}
                     </span>
-                  </span>
-                </div>
+                  </div>
+                )}
               </div>
-
-              {/* Animated glow ring */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                  background: "linear-gradient(135deg, rgba(108,99,255,0.3), rgba(0,212,255,0.3))",
-                  filter: "blur(8px)",
-                  zIndex: -1,
-                  transform: "scale(1.05)",
-                  animation: "pulse-glow 3s ease-in-out infinite",
-                }}
-              />
-
-              {/* Floating badges */}
               {floatingBadges.map((badge, i) => (
                 <motion.div
                   key={i}
@@ -95,7 +112,12 @@ export function About() {
                     left: i === 0 ? "-60px" : i === 2 ? "-40px" : undefined,
                   }}
                   animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 3 + i * 0.5, repeat: Infinity, ease: "easeInOut", delay: badge.delay }}
+                  transition={{
+                    duration: 3 + i * 0.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: badge.delay,
+                  }}
                 >
                   <span style={{ color: "#6C63FF" }}>{badge.icon}</span>
                   {badge.text}
@@ -113,7 +135,10 @@ export function About() {
           >
             <p
               className="text-xs mb-3 uppercase tracking-widest"
-              style={{ color: "#6C63FF", fontFamily: "'JetBrains Mono', monospace" }}
+              style={{
+                color: "#6C63FF",
+                fontFamily: "'JetBrains Mono', monospace",
+              }}
             >
               // about me
             </p>
@@ -137,22 +162,20 @@ export function About() {
                 Experiences
               </span>
             </h2>
-
-            <p className="mb-4 leading-relaxed" style={{ color: "#A0A0B8", fontSize: "0.95rem" }}>
-              I'm a passionate Full Stack Developer with 2+ years of hands-on experience in building web applications
-              using Python and Django. I specialize in architecting scalable backend systems, RESTful APIs, and
-              responsive frontend interfaces.
+            <p
+              className="mb-8 leading-relaxed"
+              style={{ color: "#A0A0B8", fontSize: "0.95rem" }}
+            >
+              {profile?.bio ??
+                "Passionate Full Stack Developer building scalable web applications."}
             </p>
-            <p className="mb-8 leading-relaxed" style={{ color: "#A0A0B8", fontSize: "0.95rem" }}>
-              My journey started with a curiosity about how websites work, which led me to dive deep into the Python
-              ecosystem. Today, I build production-ready applications that solve real-world problems — from e-commerce
-              platforms to data dashboards.
-            </p>
-
-            {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {stats.map((s) => (
-                <div key={s.label} className="text-center p-4 rounded-2xl" style={{ background: "#13131F", border: "1px solid #1E1E3A" }}>
+                <div
+                  key={s.label}
+                  className="text-center p-4 rounded-2xl"
+                  style={{ background: "#13131F", border: "1px solid #1E1E3A" }}
+                >
                   <div
                     className="mb-1"
                     style={{
@@ -166,7 +189,13 @@ export function About() {
                   >
                     {s.value}
                   </div>
-                  <div className="text-xs" style={{ color: "#A0A0B8", fontFamily: "'Inter', sans-serif" }}>
+                  <div
+                    className="text-xs"
+                    style={{
+                      color: "#A0A0B8",
+                      fontFamily: "'Inter', sans-serif",
+                    }}
+                  >
                     {s.label}
                   </div>
                 </div>
@@ -175,13 +204,7 @@ export function About() {
           </motion.div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes pulse-glow {
-          0%, 100% { opacity: 0.4; }
-          50% { opacity: 0.8; }
-        }
-      `}</style>
+      <style>{`@keyframes pulse-glow { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }`}</style>
     </section>
   );
 }

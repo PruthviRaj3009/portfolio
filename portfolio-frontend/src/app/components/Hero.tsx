@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Download, Eye } from "lucide-react";
 import { motion } from "motion/react";
+import { useProfile } from "../../hooks/usePortfolioData";
 
 const TYPING_STRINGS = [
   "Python Developer",
@@ -37,7 +38,7 @@ function useTypingEffect(strings: string[]) {
           }
         }
       },
-      deleting ? 50 : 80
+      deleting ? 50 : 80,
     );
     return () => clearTimeout(timeout);
   }, [charIndex, deleting, stringIndex, strings]);
@@ -47,23 +48,26 @@ function useTypingEffect(strings: string[]) {
 
 function ParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-
     let animId: number;
-    const particles: { x: number; y: number; vx: number; vy: number; r: number; alpha: number }[] = [];
-
+    const particles: {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      r: number;
+      alpha: number;
+    }[] = [];
     const resize = () => {
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
     };
     resize();
     window.addEventListener("resize", resize);
-
     for (let i = 0; i < 120; i++) {
       particles.push({
         x: Math.random() * canvas.width,
@@ -74,7 +78,6 @@ function ParticleCanvas() {
         alpha: Math.random() * 0.6 + 0.1,
       });
     }
-
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach((p) => {
@@ -84,14 +87,11 @@ function ParticleCanvas() {
         if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height;
         if (p.y > canvas.height) p.y = 0;
-
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(108,99,255,${p.alpha})`;
         ctx.fill();
       });
-
-      // Draw connection lines
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
@@ -107,24 +107,25 @@ function ParticleCanvas() {
           }
         }
       }
-
       animId = requestAnimationFrame(draw);
     };
     draw();
-
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
     };
   }, []);
-
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />;
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 w-full h-full pointer-events-none"
+    />
+  );
 }
 
 function OrbSphere() {
   return (
     <div className="relative w-72 h-72 md:w-96 md:h-96 flex items-center justify-center">
-      {/* Outer orbit rings */}
       <motion.div
         className="absolute inset-0 rounded-full border opacity-30"
         style={{ borderColor: "#6C63FF" }}
@@ -147,79 +148,54 @@ function OrbSphere() {
           style={{ background: "#00D4FF", boxShadow: "0 0 8px #00D4FF" }}
         />
       </motion.div>
-
-      {/* Core sphere */}
       <motion.div
         className="absolute rounded-full"
         style={{
           inset: "50px",
           background: "radial-gradient(circle at 35% 35%, #6C63FF, #0A0A0F)",
-          boxShadow: "0 0 60px rgba(108,99,255,0.5), 0 0 120px rgba(108,99,255,0.2)",
+          boxShadow:
+            "0 0 60px rgba(108,99,255,0.5), 0 0 120px rgba(108,99,255,0.2)",
         }}
         animate={{ scale: [1, 1.04, 1] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       />
-
-      {/* Floating dot accents */}
       <motion.div
         className="absolute w-4 h-4 rounded-full"
-        style={{ background: "#00D4FF", boxShadow: "0 0 12px #00D4FF", top: "15%", right: "10%" }}
+        style={{
+          background: "#00D4FF",
+          boxShadow: "0 0 12px #00D4FF",
+          top: "15%",
+          right: "10%",
+        }}
         animate={{ y: [-8, 8, -8] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         className="absolute w-2 h-2 rounded-full"
-        style={{ background: "#6C63FF", boxShadow: "0 0 8px #6C63FF", bottom: "20%", left: "5%" }}
+        style={{
+          background: "#6C63FF",
+          boxShadow: "0 0 8px #6C63FF",
+          bottom: "20%",
+          left: "5%",
+        }}
         animate={{ y: [8, -8, 8] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+        transition={{
+          duration: 3.5,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 0.5,
+        }}
       />
     </div>
   );
 }
 
-function CodeCard() {
-  return (
-    <motion.div
-      className="absolute bottom-4 -left-8 md:-left-16 rounded-2xl p-4 text-xs w-56 md:w-64"
-      style={{
-        background: "rgba(19,19,31,0.85)",
-        backdropFilter: "blur(16px)",
-        border: "1px solid rgba(108,99,255,0.3)",
-        fontFamily: "'JetBrains Mono', monospace",
-      }}
-      animate={{ y: [-4, 4, -4] }}
-      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-    >
-      <div className="flex items-center gap-2 mb-3">
-        <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-        <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-        <span className="ml-auto opacity-50 text-[10px]" style={{ color: "#A0A0B8" }}>
-          views.py
-        </span>
-      </div>
-      <div style={{ color: "#A0A0B8" }}>
-        <span style={{ color: "#6C63FF" }}>class</span>{" "}
-        <span style={{ color: "#00D4FF" }}>PortfolioView</span>
-        <span>(APIView):</span>
-        <br />
-        {"  "}
-        <span style={{ color: "#6C63FF" }}>def</span>{" "}
-        <span style={{ color: "#00FF87" }}>get</span>(self, req):
-        <br />
-        {"    "}
-        <span style={{ color: "#6C63FF" }}>return</span> Response(
-        <br />
-        {"      "}<span style={{ color: "#00D4FF" }}>{`{"status": "hired"}`}</span>
-        <br />
-        {"    "})
-      </div>
-    </motion.div>
-  );
-}
-
 export function Hero() {
   const typed = useTypingEffect(TYPING_STRINGS);
+  const { data: profile } = useProfile();
+
+  // Get first name only from full name
+  const firstName = profile?.name?.split(" ")[0] ?? "Pruthviraj";
 
   return (
     <section
@@ -228,8 +204,6 @@ export function Hero() {
       style={{ background: "#0A0A0F" }}
     >
       <ParticleCanvas />
-
-      {/* Radial glow */}
       <div
         className="absolute pointer-events-none"
         style={{
@@ -237,13 +211,12 @@ export function Hero() {
           right: "10%",
           width: "600px",
           height: "600px",
-          background: "radial-gradient(circle, rgba(108,99,255,0.12) 0%, transparent 70%)",
+          background:
+            "radial-gradient(circle, rgba(108,99,255,0.12) 0%, transparent 70%)",
         }}
       />
-
       <div className="relative max-w-7xl mx-auto px-6 pt-24 pb-16 w-full">
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Left */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
@@ -260,7 +233,6 @@ export function Hero() {
             >
               &gt; Available for hire
             </div>
-
             <h1
               className="mb-4 leading-tight"
               style={{
@@ -278,10 +250,18 @@ export function Hero() {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                Pruthviraj
+                {firstName}
               </span>
             </h1>
-
+            <div
+              className="mb-4 text-sm"
+              style={{
+                color: "#A0A0B8",
+                fontFamily: "'Space Grotesk', sans-serif",
+              }}
+            >
+              {profile?.title ?? "Full Stack Developer"}
+            </div>
             <div
               className="mb-8 flex items-center gap-2"
               style={{
@@ -293,18 +273,26 @@ export function Hero() {
               <span>{typed}</span>
               <span
                 className="inline-block w-0.5 h-6 ml-0.5"
-                style={{ background: "#6C63FF", animation: "blink 1s step-end infinite" }}
+                style={{
+                  background: "#6C63FF",
+                  animation: "blink 1s step-end infinite",
+                }}
               />
             </div>
-
-            <p className="mb-10 max-w-lg leading-relaxed" style={{ color: "#A0A0B8", fontSize: "1rem" }}>
-              I build scalable, high-performance web applications with Python & Django. Passionate about clean code,
-              intuitive APIs, and exceptional user experiences.
+            <p
+              className="mb-10 max-w-lg leading-relaxed"
+              style={{ color: "#A0A0B8", fontSize: "1rem" }}
+            >
+              {profile?.bio ??
+                "I build scalable, high-performance web applications with Python & Django."}
             </p>
-
             <div className="flex flex-wrap gap-4">
               <button
-                onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() =>
+                  document
+                    .getElementById("projects")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
                 className="flex items-center gap-2 px-7 py-3.5 rounded-full font-medium transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 style={{
                   background: "linear-gradient(135deg, #6C63FF, #00D4FF)",
@@ -313,25 +301,44 @@ export function Hero() {
                   boxShadow: "0 4px 24px rgba(108,99,255,0.4)",
                 }}
               >
-                <Eye size={16} />
-                View My Work
+                <Eye size={16} /> View My Work
               </button>
-              <a
-                href="#"
-                className="flex items-center gap-2 px-7 py-3.5 rounded-full font-medium transition-all duration-300 hover:scale-105"
-                style={{
-                  border: "1px solid rgba(108,99,255,0.6)",
-                  color: "#fff",
-                  fontFamily: "'Space Grotesk', sans-serif",
-                }}
-              >
-                <Download size={16} />
-                Download Resume
-              </a>
+
+              {profile?.resume ? (
+                // resume uploaded in Django Admin → download it
+
+                <a
+                  href={profile.resume}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="flex items-center gap-2 px-7 py-3.5 rounded-full
+                  font-medium transition-all duration-300 hover:scale-105"
+                  style={{
+                    border: "1px solid rgba(108,99,255,0.6)",
+                    color: "#fff",
+                    fontFamily: "'Space Grotesk', sans-serif",
+                  }}
+                >
+                  <Download size={16} /> Download Resume
+                </a>
+              ) : (
+                // no resume uploaded yet → show disabled
+                <button
+                  disabled
+                  className="flex items-center gap-2 px-7 py-3.5 rounded-full font-medium"
+                  style={{
+                    border: "1px solid rgba(108,99,255,0.2)",
+                    color: "rgba(255,255,255,0.3)",
+                    fontFamily: "'Space Grotesk', sans-serif",
+                    cursor: "not-allowed",
+                  }}
+                >
+                  <Download size={16} /> Resume Coming Soon
+                </button>
+              )}
             </div>
           </motion.div>
-
-          {/* Right — 3D orb */}
           <motion.div
             className="flex justify-center relative"
             initial={{ opacity: 0, scale: 0.8 }}
@@ -339,27 +346,28 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <OrbSphere />
-            <CodeCard />
           </motion.div>
         </div>
-
-        {/* Scroll indicator */}
         <motion.div
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
-          onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
+          onClick={() =>
+            document
+              .getElementById("about")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
         >
-          <span className="text-xs" style={{ color: "#A0A0B8", fontFamily: "'Inter', sans-serif" }}>
+          <span
+            className="text-xs"
+            style={{ color: "#A0A0B8", fontFamily: "'Inter', sans-serif" }}
+          >
             Scroll down
           </span>
           <ChevronDown size={20} style={{ color: "#6C63FF" }} />
         </motion.div>
       </div>
-
-      <style>{`
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-      `}</style>
+      <style>{`@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }`}</style>
     </section>
   );
 }

@@ -1,11 +1,30 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import { useProfile } from "../../hooks/usePortfolioData";
 
-const navLinks = ["Home", "About", "Skills", "Projects", "Experience", "Contact"];
+const navLinks = [
+  "Home",
+  "About",
+  "Skills",
+  "Projects",
+  "Experience",
+  "Contact",
+];
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { data: profile } = useProfile();
+
+  // Get initials from name — "Pruthviraj Pawar" → "PP"
+  const initials = profile?.name
+    ? profile.name
+        .split(" ")
+        .map((word) => word[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "PP"; // fallback while loading
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -30,13 +49,16 @@ export function Navbar() {
       }}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo */}
+        {/* Logo — initials from database */}
         <div
           className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm cursor-pointer select-none"
-          style={{ background: "linear-gradient(135deg, #6C63FF, #00D4FF)", fontFamily: "'Space Grotesk', sans-serif" }}
+          style={{
+            background: "linear-gradient(135deg, #6C63FF, #00D4FF)",
+            fontFamily: "'Space Grotesk', sans-serif",
+          }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
-          PP
+          {initials}
         </div>
 
         {/* Desktop nav */}
@@ -81,14 +103,21 @@ export function Navbar() {
       {mobileOpen && (
         <div
           className="md:hidden px-6 pb-6 flex flex-col gap-4"
-          style={{ background: "rgba(10,10,15,0.95)", backdropFilter: "blur(20px)" }}
+          style={{
+            background: "rgba(10,10,15,0.95)",
+            backdropFilter: "blur(20px)",
+          }}
         >
           {navLinks.map((link) => (
             <button
               key={link}
               onClick={() => handleNav(link)}
               className="text-left text-sm py-2 border-b transition-colors duration-200 hover:text-white"
-              style={{ color: "#A0A0B8", borderColor: "#1E1E3A", fontFamily: "'Inter', sans-serif" }}
+              style={{
+                color: "#A0A0B8",
+                borderColor: "#1E1E3A",
+                fontFamily: "'Inter', sans-serif",
+              }}
             >
               {link}
             </button>
@@ -96,7 +125,10 @@ export function Navbar() {
           <button
             onClick={() => handleNav("Contact")}
             className="mt-2 px-5 py-2 rounded-full text-sm font-medium text-center"
-            style={{ background: "linear-gradient(135deg, #6C63FF, #00D4FF)", color: "#fff" }}
+            style={{
+              background: "linear-gradient(135deg, #6C63FF, #00D4FF)",
+              color: "#fff",
+            }}
           >
             Hire Me
           </button>
