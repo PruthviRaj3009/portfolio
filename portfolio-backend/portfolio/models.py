@@ -166,3 +166,15 @@ class Accolade(models.Model):
 
     class Meta:
         ordering = ["order"]
+
+
+class HeroTypingText(models.Model):
+    text = models.CharField(max_length=100)
+    order = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        ordering = ["order"]

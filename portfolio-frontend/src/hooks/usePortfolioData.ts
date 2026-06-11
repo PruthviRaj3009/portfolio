@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { portfolioService } from "../services/portfolio";
+
 import {
   Profile,
   Project,
@@ -9,6 +10,7 @@ import {
   Certificate,
   Accolade,
 } from "../types";
+import { api } from "../lib/api";
 
 // Generic hook to fetch any data
 function useFetch<T>(fetchFn: () => Promise<T>) {
@@ -45,3 +47,8 @@ export const useCertificates = () =>
 
 export const useAccolades = () =>
   useFetch<Accolade[]>(portfolioService.getAccolades);
+
+export const useHeroTypingText = () =>
+  useFetch<{ id: number; text: string; order: number }[]>(() =>
+    portfolioService.getHeroTexts(),
+  );

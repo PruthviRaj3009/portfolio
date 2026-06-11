@@ -19,4 +19,6 @@ export const portfolioService = {
   getCertificates: () => api.get<Certificate[]>("/certificates/"),
   getAccolades: () => api.get<Accolade[]>("/accolades/"),
   sendContact: (data: ContactForm) => api.post("/contact/", data),
+  getHeroTexts: () =>
+    api.get<{ id: number; text: string; order: number }[]>("/hero-texts/"),
 };

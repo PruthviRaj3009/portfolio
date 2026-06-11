@@ -9,7 +9,15 @@ from .models import (
     Certificate,
     ContactMessage,
     Accolade,
+    HeroTypingText,
 )
+from .models import HeroTypingText
+
+
+@admin.register(HeroTypingText)
+class HeroTypingTextAdmin(admin.ModelAdmin):
+    list_display = ["text", "order", "is_active"]
+    list_editable = ["order", "is_active"]
 
 
 class ExperiencePointInline(admin.TabularInline):

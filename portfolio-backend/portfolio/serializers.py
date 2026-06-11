@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import (
+    HeroTypingText,
     Profile,
     Project,
     Skill,
@@ -9,6 +10,7 @@ from .models import (
     Certificate,
     ContactMessage,
     Accolade,
+    HeroTypingText,
 )
 
 
@@ -34,6 +36,12 @@ class EducationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Education
         fields = "__all__"
+
+
+class HeroTypingTextSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HeroTypingText
+        fields = ["id", "text", "order"]
 
 
 class ExperiencePointSerializer(serializers.ModelSerializer):

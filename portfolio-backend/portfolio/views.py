@@ -4,9 +4,11 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import generics
 
 
 from .models import (
+    HeroTypingText,
     Profile,
     Project,
     Skill,
@@ -16,8 +18,10 @@ from .models import (
     Certificate,
     ContactMessage,
     Accolade,
+    HeroTypingText,
 )
 from .serializers import (
+    HeroTypingTextSerializer,
     ProfileSerializer,
     ProjectSerializer,
     SkillSerializer,
@@ -26,6 +30,7 @@ from .serializers import (
     CertificateSerializer,
     ContactMessageSerializer,
     AccoladeSerializer,
+    HeroTypingTextSerializer,
 )
 
 # ── API Views ──────────────────────────────────────────────
@@ -46,6 +51,11 @@ class ProjectListView(ListAPIView):
 class SkillListView(ListAPIView):
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
+
+
+class HeroTypingTextView(ListAPIView):
+    queryset = HeroTypingText.objects.filter(is_active=True)
+    serializer_class = HeroTypingTextSerializer
 
 
 class EducationListView(ListAPIView):

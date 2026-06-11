@@ -10,4 +10,5 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["gunicorn", "portfolio_project.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Run migrations then start server
+CMD sh -c "python manage.py migrate && python manage.py collectstatic --no-input && gunicorn portfolio_project.wsgi:application --bind 0.0.0.0:${PORT:-8000}"

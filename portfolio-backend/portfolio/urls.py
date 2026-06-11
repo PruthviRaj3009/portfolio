@@ -11,4 +11,5 @@ urlpatterns = [
     path("api/certificates/", views.CertificateListView.as_view(), name="certificates"),
     path("api/accolades/", views.AccoladeListView.as_view(), name="accolades"),
     path("api/contact/", views.ContactView.as_view(), name="contact"),
+    path("api/hero-texts/", views.HeroTypingTextView.as_view(), name="hero-texts"),
 ]

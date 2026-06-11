@@ -1,15 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { ChevronDown, Download, Eye } from "lucide-react";
 import { motion } from "motion/react";
-import { useProfile } from "../../hooks/usePortfolioData";
-
-const TYPING_STRINGS = [
-  "Python Developer",
-  "Django Expert",
-  "Full Stack Engineer",
-  "REST API Specialist",
-  "Open Source Contributor",
-];
+import { useProfile, useHeroTypingText } from "../../hooks/usePortfolioData";
 
 function useTypingEffect(strings: string[]) {
   const [text, setText] = useState("");
@@ -17,8 +9,12 @@ function useTypingEffect(strings: string[]) {
   const [charIndex, setCharIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
+  // stable strings reference to avoid resetting animation
+  const stableStrings = useMemo(() => strings, [strings.join(",")]);
+
   useEffect(() => {
-    const current = strings[stringIndex];
+    if (!stableStrings.length) return;
+    const current = stableStrings[stringIndex % stableStrings.length];
     const timeout = setTimeout(
       () => {
         if (!deleting) {
@@ -34,14 +30,14 @@ function useTypingEffect(strings: string[]) {
             setCharIndex((c) => c - 1);
           } else {
             setDeleting(false);
-            setStringIndex((i) => (i + 1) % strings.length);
+            setStringIndex((i) => (i + 1) % stableStrings.length);
           }
         }
       },
       deleting ? 50 : 80,
     );
     return () => clearTimeout(timeout);
-  }, [charIndex, deleting, stringIndex, strings]);
+  }, [charIndex, deleting, stringIndex, stableStrings]);
 
   return text;
 }
@@ -191,10 +187,17 @@ function OrbSphere() {
 }
 
 export function Hero() {
-  const typed = useTypingEffect(TYPING_STRINGS);
   const { data: profile } = useProfile();
+  const { data: heroTexts } = useHeroTypingText();
 
-  // Get first name only from full name
+  // stable fallback while loading from API
+  const typingStrings =
+    heroTexts && heroTexts.length > 0
+      ? heroTexts.map((item: any) => item.text)
+      : ["Software Developer"];
+
+  const typed = useTypingEffect(typingStrings);
+
   const firstName = profile?.name?.split(" ")[0] ?? "Pruthviraj";
 
   return (
@@ -222,6 +225,7 @@ export function Hero() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
+            {/* Available badge */}
             <div
               className="inline-block px-4 py-1.5 rounded-full text-xs mb-6 border"
               style={{
@@ -233,6 +237,8 @@ export function Hero() {
             >
               &gt; Available for hire
             </div>
+
+            {/* Name */}
             <h1
               className="mb-4 leading-tight"
               style={{
@@ -253,6 +259,8 @@ export function Hero() {
                 {firstName}
               </span>
             </h1>
+
+            {/* Title from database */}
             <div
               className="mb-4 text-sm"
               style={{
@@ -262,6 +270,8 @@ export function Hero() {
             >
               {profile?.title ?? "Full Stack Developer"}
             </div>
+
+            {/* Typing animation from database */}
             <div
               className="mb-8 flex items-center gap-2"
               style={{
@@ -279,6 +289,8 @@ export function Hero() {
                 }}
               />
             </div>
+
+            {/* Bio from database */}
             <p
               className="mb-10 max-w-lg leading-relaxed"
               style={{ color: "#A0A0B8", fontSize: "1rem" }}
@@ -286,6 +298,8 @@ export function Hero() {
               {profile?.bio ??
                 "I build scalable, high-performance web applications with Python & Django."}
             </p>
+
+            {/* Buttons */}
             <div className="flex flex-wrap gap-4">
               <button
                 onClick={() =>
@@ -305,15 +319,12 @@ export function Hero() {
               </button>
 
               {profile?.resume ? (
-                // resume uploaded in Django Admin → download it
-
                 <a
                   href={profile.resume}
                   target="_blank"
                   rel="noopener noreferrer"
                   download
-                  className="flex items-center gap-2 px-7 py-3.5 rounded-full
-                  font-medium transition-all duration-300 hover:scale-105"
+                  className="flex items-center gap-2 px-7 py-3.5 rounded-full font-medium transition-all duration-300 hover:scale-105"
                   style={{
                     border: "1px solid rgba(108,99,255,0.6)",
                     color: "#fff",
@@ -323,7 +334,6 @@ export function Hero() {
                   <Download size={16} /> Download Resume
                 </a>
               ) : (
-                // no resume uploaded yet → show disabled
                 <button
                   disabled
                   className="flex items-center gap-2 px-7 py-3.5 rounded-full font-medium"
@@ -339,6 +349,8 @@ export function Hero() {
               )}
             </div>
           </motion.div>
+
+          {/* Right — 3D orb */}
           <motion.div
             className="flex justify-center relative"
             initial={{ opacity: 0, scale: 0.8 }}
@@ -348,6 +360,8 @@ export function Hero() {
             <OrbSphere />
           </motion.div>
         </div>
+
+        {/* Scroll indicator */}
         <motion.div
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
           onClick={() =>
