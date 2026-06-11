@@ -1,13 +1,17 @@
 from pathlib import Path
 from decouple import config
+import os
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY")
 
-DEBUG = config("DEBUG", default=False, cast=bool)
+import os
 
-ALLOWED_HOSTS = ["*"]
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1").split(",")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -19,6 +23,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "portfolio",
+    "axes",
 ]
 
 MIDDLEWARE = [
@@ -30,6 +35,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "axes.middleware.AxesMiddleware",
 ]
 
 ROOT_URLCONF = "portfolio_project.urls"
@@ -92,11 +98,13 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost",
     "http://localhost:80",
-    "http://localhost:8080",  # full docker setup
-    "http://localhost:5173",  # npm run dev
-    "http://localhost:3000",  # alternative dev port
+    "http://localhost:8080",
+    "http://localhost:5173",
+    "http://localhost:3000",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:8080",
+    # Render Frontend URL
+    "https://your-frontend.onrender.com",
 ]
 
 # ── CSRF settings ─────────────────────────────────────────
@@ -107,6 +115,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:8080",
+    # Render Frontend URL
+    "https://your-frontend.onrender.com",
 ]
 
 # ── REST Framework settings ───────────────────────────────
@@ -118,3 +128,17 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.JSONRenderer",
     ],
 }
+AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesStandaloneBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+# ecurity against brute-force login attacks
+
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = timedelta(hours=1)
+AXES_RESET_ON_SUCCESS = True
+
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY"
