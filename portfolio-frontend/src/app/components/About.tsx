@@ -4,19 +4,26 @@ import {
   useProfile,
   useProjects,
   useCertificates,
+  useSkills,
+  useExperienceYearCounts,
+  useHeroTypingText,
 } from "../../hooks/usePortfolioData";
 
 const floatingBadges = [
   { icon: <Briefcase size={14} />, text: "Open to Work", delay: 0 },
-  { icon: <Code2 size={14} />, text: "Full Stack Dev", delay: 0.3 },
-  { icon: <Star size={14} />, text: "Django Expert", delay: 0.6 },
+  { icon: <Code2 size={14} />, text: "Full Stack Developer", delay: 0.3 },
+  { icon: <Star size={14} />, text: "Django Developer", delay: 0.6 },
 ];
 
 export function About() {
   const { data: profile } = useProfile();
   const { data: projects } = useProjects();
   const { data: certificates } = useCertificates();
-
+  const { data: experienceYearCounts } = useExperienceYearCounts();
+  const { data: skills } = useSkills();
+  const frameworkCount =
+    skills?.filter((skill) => skill.category === "framework").length || 0;
+  const { data: heroTexts } = useHeroTypingText();
   const initials = profile?.name
     ? profile.name
         .split(" ")
@@ -25,11 +32,10 @@ export function About() {
         .slice(0, 2)
         .toUpperCase()
     : "PP";
-
   const stats = [
     { label: "Projects Done", value: `${projects?.length ?? 0}+` },
-    { label: "Technologies", value: "15+" },
-    { label: "Experience", value: "2+ Yrs" },
+    { label: "Technologies", value: frameworkCount.toString() },
+    { label: "Experience", value: `${experienceYearCounts?.length ?? 0}+ Yrs` },
     { label: "Certifications", value: `${certificates?.length ?? 0}+` },
   ];
 

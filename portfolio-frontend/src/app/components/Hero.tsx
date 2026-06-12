@@ -145,7 +145,7 @@ function OrbSphere() {
         />
       </motion.div>
       <motion.div
-        className="absolute rounded-full"
+        className="absolute rounded-full flex items-center justify-center"
         style={{
           inset: "50px",
           background: "radial-gradient(circle at 35% 35%, #6C63FF, #0A0A0F)",
@@ -154,7 +154,21 @@ function OrbSphere() {
         }}
         animate={{ scale: [1, 1.04, 1] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-      />
+      >
+        <div
+          style={{
+            color: "#FFFFFF",
+            fontSize: "2rem",
+            fontWeight: 700,
+            fontFamily: "'Times New Roman', serif",
+            textAlign: "center",
+            textShadow: "0 0 15px rgba(255,255,255,0.4)",
+            userSelect: "none",
+          }}
+        >
+          e<sup>iπ</sup> + 1 = 0
+        </div>
+      </motion.div>
       <motion.div
         className="absolute w-4 h-4 rounded-full"
         style={{
@@ -189,6 +203,7 @@ function OrbSphere() {
 export function Hero() {
   const { data: profile } = useProfile();
   const { data: heroTexts } = useHeroTypingText();
+  const resumeLink = profile?.resume_url;
 
   // stable fallback while loading from API
   const typingStrings =
@@ -318,12 +333,11 @@ export function Hero() {
                 <Eye size={16} /> View My Work
               </button>
 
-              {profile?.resume ? (
+              {resumeLink ? (
                 <a
-                  href={profile.resume}
+                  href={resumeLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  download
                   className="flex items-center gap-2 px-7 py-3.5 rounded-full font-medium transition-all duration-300 hover:scale-105"
                   style={{
                     border: "1px solid rgba(108,99,255,0.6)",

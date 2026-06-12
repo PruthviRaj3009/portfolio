@@ -9,7 +9,7 @@ class Profile(models.Model):
     email = models.EmailField()
     phone = models.CharField(max_length=20, blank=True)
     location = models.CharField(max_length=100)  # "Solapur, Maharashtra"
-    resume = models.FileField(upload_to="resume/", blank=True, null=True)
+    resume_url = models.URLField(blank=True)
 
     # Social links
     github_url = models.URLField(blank=True)
@@ -178,3 +178,13 @@ class HeroTypingText(models.Model):
 
     class Meta:
         ordering = ["order"]
+
+
+class ExperienceYearCount(models.Model):
+    Startyear = models.DateField()  # "2020", "2021", "2022", "2023", "2024"
+    Endyear = models.DateField()  # "2020", "2021", "2022", "2023", "2024"
+    count = models.IntegerField(default=0)
+    # number of projects in that year
+
+    def __str__(self):
+        return f"{self.Startyear.year} - {self.Endyear.year}"

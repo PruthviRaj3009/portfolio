@@ -10,7 +10,7 @@ import {
   MessageCircle,
   Send,
 } from "lucide-react";
-import { api } from "../../lib/api";
+
 import { useProfile } from "../../hooks/usePortfolioData";
 
 export function Contact() {
@@ -21,26 +21,21 @@ export function Contact() {
     subject: "",
     message: "",
   });
-  const [sent, setSent] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSending(true);
-    setError(null);
-    try {
-      await api.post("/contact/", form);
-      setSent(true);
-      setForm({ name: "", email: "", subject: "", message: "" });
-      setTimeout(() => setSent(false), 3000);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
-    } finally {
-      setSending(false);
-    }
-  };
 
+    if (!profile?.email) return;
+
+    const mailtoLink =
+      `mailto:${profile.email}` +
+      `?subject=${encodeURIComponent(form.subject)}` +
+      `&body=${encodeURIComponent(
+        `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`,
+      )}`;
+
+    window.location.href = mailtoLink;
+  };
   const contactItems = [
     { icon: <Mail size={16} />, label: "Email", value: profile?.email ?? "" },
     { icon: <Phone size={16} />, label: "Phone", value: profile?.phone ?? "" },
@@ -319,7 +314,6 @@ export function Contact() {
               </div>
               <button
                 type="submit"
-                disabled={sending}
                 className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-medium transition-all duration-300 hover:opacity-90 disabled:opacity-60"
                 style={{
                   background: "linear-gradient(135deg, #6C63FF, #00D4FF)",
@@ -329,15 +323,8 @@ export function Contact() {
                 }}
               >
                 <Send size={16} />
-                {sending
-                  ? "Sending..."
-                  : sent
-                    ? "Message Sent! ✓"
-                    : "Send Message"}
+                Send Email
               </button>
-              {error && (
-                <p style={{ color: "#FF6B6B", fontSize: "0.8rem" }}>{error}</p>
-              )}
             </form>
           </motion.div>
         </div>

@@ -7,7 +7,7 @@ export interface Profile {
   email: string;
   phone: string;
   location: string;
-  resume: string | null;
+  resume_url?: string;
   github_url: string;
   linkedin_url: string;
   twitter_url: string;
@@ -93,4 +93,9 @@ export interface ContactForm {
   email: string;
   subject: string;
   message: string;
+}
+
+export interface ExperienceYearCount {
+  category: string;
+  year_count: number;
 }

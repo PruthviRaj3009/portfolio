@@ -10,6 +10,7 @@ from .models import (
     ContactMessage,
     Accolade,
     HeroTypingText,
+    ExperienceYearCount,
 )
 from .models import HeroTypingText
 
@@ -80,3 +81,8 @@ class AccoladeAdmin(admin.ModelAdmin):
     list_editable = ["order"]
     list_filter = ["category"]
     search_fields = ["title", "issuer"]
+
+
+@admin.register(ExperienceYearCount)
+class ExperienceYearCountAdmin(admin.ModelAdmin):
+    list_display = ["count"]

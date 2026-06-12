@@ -19,6 +19,7 @@ from .models import (
     ContactMessage,
     Accolade,
     HeroTypingText,
+    ExperienceYearCount,
 )
 from .serializers import (
     HeroTypingTextSerializer,
@@ -31,9 +32,15 @@ from .serializers import (
     ContactMessageSerializer,
     AccoladeSerializer,
     HeroTypingTextSerializer,
+    ExperienceYearCountSerializer,
 )
 
 # ── API Views ──────────────────────────────────────────────
+
+
+class ExperienceYearCountListView(ListAPIView):
+    queryset = ExperienceYearCount.objects.all()
+    serializer_class = ExperienceYearCountSerializer
 
 
 class ProfileView(RetrieveAPIView):

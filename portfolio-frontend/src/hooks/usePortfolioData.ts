@@ -9,6 +9,7 @@ import {
   Experience,
   Certificate,
   Accolade,
+  ExperienceYearCount,
 } from "../types";
 import { api } from "../lib/api";
 
@@ -52,3 +53,6 @@ export const useHeroTypingText = () =>
   useFetch<{ id: number; text: string; order: number }[]>(() =>
     portfolioService.getHeroTexts(),
   );
+
+export const useExperienceYearCounts = () =>
+  useFetch<ExperienceYearCount[]>(portfolioService.getExperienceYearCounts);

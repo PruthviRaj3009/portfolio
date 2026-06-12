@@ -11,7 +11,14 @@ from .models import (
     ContactMessage,
     Accolade,
     HeroTypingText,
+    ExperienceYearCount,
 )
+
+
+class ExperienceYearCountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExperienceYearCount
+        fields = ["category", "year_count"]
 
 
 class ProfileSerializer(serializers.ModelSerializer):
