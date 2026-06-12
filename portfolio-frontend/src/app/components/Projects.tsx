@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { Github, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { useProjects } from "../../hooks/usePortfolioData";
+import { useProfile } from "../../hooks/usePortfolioData";
 
 // colors cycle through for each project card
 const COLORS = [
@@ -17,7 +18,7 @@ export function Projects() {
   const { data: projects, loading, error } = useProjects();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
-
+  const { data: profile } = useProfile();
   const prev = () => setCurrentIndex((i) => Math.max(0, i - 1));
   const next = () =>
     setCurrentIndex((i) =>
@@ -302,7 +303,9 @@ export function Projects() {
         {/* View all on GitHub */}
         <div className="text-center mt-8">
           <a
-            href="https://github.com"
+            href={profile?.github_url}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105"
             style={{
               border: "1px solid rgba(108,99,255,0.4)",

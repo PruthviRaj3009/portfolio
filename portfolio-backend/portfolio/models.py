@@ -15,6 +15,7 @@ class Profile(models.Model):
     github_url = models.URLField(blank=True)
     linkedin_url = models.URLField(blank=True)
     twitter_url = models.URLField(blank=True)
+    leetcode_url = models.URLField(blank=True)
     whatsapp_number = models.CharField(max_length=20, blank=True)  # +91XXXXXXXXXX
 
     def __str__(self):

@@ -9,6 +9,7 @@ import {
   Twitter,
   MessageCircle,
   Send,
+  Code2,
 } from "lucide-react";
 
 import { useProfile } from "../../hooks/usePortfolioData";
@@ -17,7 +18,6 @@ export function Contact() {
   const { data: profile } = useProfile();
   const [form, setForm] = useState({
     name: "",
-    email: "",
     subject: "",
     message: "",
   });
@@ -30,9 +30,7 @@ export function Contact() {
     const mailtoLink =
       `mailto:${profile.email}` +
       `?subject=${encodeURIComponent(form.subject)}` +
-      `&body=${encodeURIComponent(
-        `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`,
-      )}`;
+      `&body=${encodeURIComponent(`Name: ${form.name}\n \n${form.message}`)}`;
 
     window.location.href = mailtoLink;
   };
@@ -53,6 +51,7 @@ export function Contact() {
       href: profile?.linkedin_url,
       label: "LinkedIn",
     },
+
     {
       icon: <Twitter size={18} />,
       href: profile?.twitter_url,
@@ -235,13 +234,7 @@ export function Contact() {
                   />
                 </div>
                 <div>
-                  <label
-                    className="block text-xs mb-2"
-                    style={{ color: "#A0A0B8" }}
-                  >
-                    Email
-                  </label>
-                  <input
+                  {/* <input
                     type="email"
                     style={inputStyle}
                     placeholder="your@email.com"
@@ -258,7 +251,7 @@ export function Contact() {
                         "#1E1E3A")
                     }
                     required
-                  />
+                  /> */}
                 </div>
               </div>
               <div>

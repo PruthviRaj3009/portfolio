@@ -12,6 +12,7 @@ export interface Profile {
   linkedin_url: string;
   twitter_url: string;
   whatsapp_number: string;
+  leetcode_url: string;
 }
 
 export interface Project {
