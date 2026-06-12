@@ -51,7 +51,11 @@ export function Contact() {
       href: profile?.linkedin_url,
       label: "LinkedIn",
     },
-
+    {
+      icon: <Code2 size={18} />,
+      href: profile?.leetcode_url,
+      label: "LeetCode",
+    },
     {
       icon: <Twitter size={18} />,
       href: profile?.twitter_url,
