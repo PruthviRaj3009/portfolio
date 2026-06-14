@@ -13,8 +13,9 @@ urlpatterns = [
     path("api/contact/", views.ContactView.as_view(), name="contact"),
     path("api/hero-texts/", views.HeroTypingTextView.as_view(), name="hero-texts"),
     path(
-        "api/experience-year-counts/",
-        views.ExperienceYearCountListView.as_view(),
-        name="experience-year-counts",
+        "api/message-display/",
+        views.MessageDisplayView.as_view(),
+        name="message-display",
     ),
+    path("api/slogans/", views.SloganView.as_view(), name="slogans"),
 ]

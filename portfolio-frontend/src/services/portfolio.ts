@@ -8,7 +8,8 @@ import {
   Certificate,
   Accolade,
   ContactForm,
-  ExperienceYearCount,
+  MessageDisplay,
+  Slogan,
 } from "../types";
 
 export const portfolioService = {
@@ -20,8 +21,8 @@ export const portfolioService = {
   getCertificates: () => api.get<Certificate[]>("/certificates/"),
   getAccolades: () => api.get<Accolade[]>("/accolades/"),
   sendContact: (data: ContactForm) => api.post("/contact/", data),
-  getExperienceYearCounts: () =>
-    api.get<ExperienceYearCount[]>("/experience-year-counts/"),
+  getSelection: () => api.get<Slogan>("/slogans/"),
+  getMessageDisplay: () => api.get<MessageDisplay>("/message-display/"),
   getHeroTexts: () =>
     api.get<{ id: number; text: string; order: number }[]>("/hero-texts/"),
 };

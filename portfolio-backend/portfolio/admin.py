@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import (
+    MessageDisplay,
     Profile,
     Project,
     Skill,
@@ -10,7 +11,7 @@ from .models import (
     ContactMessage,
     Accolade,
     HeroTypingText,
-    ExperienceYearCount,
+    Slogan,
 )
 from .models import HeroTypingText
 
@@ -83,6 +84,12 @@ class AccoladeAdmin(admin.ModelAdmin):
     search_fields = ["title", "issuer"]
 
 
-@admin.register(ExperienceYearCount)
-class ExperienceYearCountAdmin(admin.ModelAdmin):
-    list_display = ["count"]
+@admin.register(MessageDisplay)
+class MessageDisplayAdmin(admin.ModelAdmin):
+    list_display = ["available", "experience", "notice_period"]
+    list_editable = ["experience", "notice_period"]
+
+
+@admin.register(Slogan)
+class SloganAdmin(admin.ModelAdmin):
+    list_display = ["text"]

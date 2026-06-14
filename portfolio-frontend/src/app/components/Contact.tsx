@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
+import emailjs from "@emailjs/browser";
 import {
   Mail,
   Phone,
@@ -10,30 +11,53 @@ import {
   MessageCircle,
   Send,
   Code2,
+  CheckCircle,
+  AlertCircle,
 } from "lucide-react";
-
 import { useProfile } from "../../hooks/usePortfolioData";
 
 export function Contact() {
   const { data: profile } = useProfile();
   const [form, setForm] = useState({
     name: "",
+    email: "",
     subject: "",
     message: "",
   });
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle",
+  );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setStatus("sending");
 
-    if (!profile?.email) return;
+    try {
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        {
+          from_name: form.name,
+          from_email: form.email,
+          subject: form.subject,
+          message: form.message,
+          to_email: profile?.email ?? "",
+        },
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+      );
 
-    const mailtoLink =
-      `mailto:${profile.email}` +
-      `?subject=${encodeURIComponent(form.subject)}` +
-      `&body=${encodeURIComponent(`Name: ${form.name}\n \n${form.message}`)}`;
+      setStatus("sent");
+      setForm({ name: "", email: "", subject: "", message: "" });
 
-    window.location.href = mailtoLink;
+      // reset status after 4 seconds
+      setTimeout(() => setStatus("idle"), 4000);
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 4000);
+    }
   };
+
   const contactItems = [
     { icon: <Mail size={16} />, label: "Email", value: profile?.email ?? "" },
     { icon: <Phone size={16} />, label: "Phone", value: profile?.phone ?? "" },
@@ -45,7 +69,11 @@ export function Contact() {
   ].filter((item) => item.value);
 
   const socials = [
-    { icon: <Github size={18} />, href: profile?.github_url, label: "GitHub" },
+    {
+      icon: <Github size={18} />,
+      href: profile?.github_url,
+      label: "GitHub",
+    },
     {
       icon: <Linkedin size={18} />,
       href: profile?.linkedin_url,
@@ -53,7 +81,7 @@ export function Contact() {
     },
     {
       icon: <Code2 size={18} />,
-      href: profile?.leetcode_url,
+      href: (profile as any)?.leetcode_url,
       label: "LeetCode",
     },
     {
@@ -131,6 +159,7 @@ export function Contact() {
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-12">
+          {/* Left — contact info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -143,6 +172,7 @@ export function Contact() {
               I'm currently open to new opportunities. Don't hesitate to reach
               out!
             </p>
+
             <div className="space-y-5 mb-10">
               {contactItems.map((item) => (
                 <div key={item.label} className="flex items-center gap-4">
@@ -172,6 +202,7 @@ export function Contact() {
                 </div>
               ))}
             </div>
+
             <div className="flex gap-3">
               {socials.map((s) => (
                 <a
@@ -203,6 +234,7 @@ export function Contact() {
             </div>
           </motion.div>
 
+          {/* Right — form */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -213,6 +245,7 @@ export function Contact() {
               className="rounded-2xl p-8 space-y-5"
               style={{ background: "#13131F", border: "1px solid #1E1E3A" }}
             >
+              {/* Name + Email row */}
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label
@@ -237,8 +270,16 @@ export function Contact() {
                     required
                   />
                 </div>
+
+                {/* Email field — restored */}
                 <div>
-                  {/* <input
+                  <label
+                    className="block text-xs mb-2"
+                    style={{ color: "#A0A0B8" }}
+                  >
+                    Email
+                  </label>
+                  <input
                     type="email"
                     style={inputStyle}
                     placeholder="your@email.com"
@@ -255,9 +296,11 @@ export function Contact() {
                         "#1E1E3A")
                     }
                     required
-                  /> */}
+                  />
                 </div>
               </div>
+
+              {/* Subject */}
               <div>
                 <label
                   className="block text-xs mb-2"
@@ -283,6 +326,8 @@ export function Contact() {
                   required
                 />
               </div>
+
+              {/* Message */}
               <div>
                 <label
                   className="block text-xs mb-2"
@@ -309,19 +354,79 @@ export function Contact() {
                   required
                 />
               </div>
+
+              {/* Submit button */}
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-medium transition-all duration-300 hover:opacity-90 disabled:opacity-60"
+                disabled={status === "sending"}
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-medium transition-all duration-300 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{
-                  background: "linear-gradient(135deg, #6C63FF, #00D4FF)",
+                  background:
+                    status === "sent"
+                      ? "linear-gradient(135deg, #00FF87, #00D4FF)"
+                      : status === "error"
+                        ? "linear-gradient(135deg, #FF6B6B, #FF8E53)"
+                        : "linear-gradient(135deg, #6C63FF, #00D4FF)",
                   color: "#fff",
                   fontFamily: "'Space Grotesk', sans-serif",
                   boxShadow: "0 4px 24px rgba(108,99,255,0.4)",
+                  transition: "all 0.3s ease",
                 }}
               >
-                <Send size={16} />
-                Send Email
+                {status === "sending" && (
+                  <>
+                    <div
+                      className="w-4 h-4 rounded-full border-2 border-t-transparent animate-spin"
+                      style={{
+                        borderColor: "#fff",
+                        borderTopColor: "transparent",
+                      }}
+                    />
+                    Sending...
+                  </>
+                )}
+                {status === "sent" && (
+                  <>
+                    <CheckCircle size={16} />
+                    Message Sent!
+                  </>
+                )}
+                {status === "error" && (
+                  <>
+                    <AlertCircle size={16} />
+                    Failed — Try Again
+                  </>
+                )}
+                {status === "idle" && (
+                  <>
+                    <Send size={16} />
+                    Send Message
+                  </>
+                )}
               </button>
+
+              {/* Status messages */}
+              {status === "sent" && (
+                <motion.p
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center text-sm"
+                  style={{ color: "#00FF87" }}
+                >
+                  ✅ Message sent! I'll get back to you soon.
+                </motion.p>
+              )}
+              {status === "error" && (
+                <motion.p
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center text-sm"
+                  style={{ color: "#FF6B6B" }}
+                >
+                  ❌ Something went wrong. Please try again or email me
+                  directly.
+                </motion.p>
+              )}
             </form>
           </motion.div>
         </div>

@@ -19,10 +19,12 @@ from .models import (
     ContactMessage,
     Accolade,
     HeroTypingText,
-    ExperienceYearCount,
+    MessageDisplay,
+    Slogan,
 )
 from .serializers import (
     HeroTypingTextSerializer,
+    MessageDisplaySerializer,
     ProfileSerializer,
     ProjectSerializer,
     SkillSerializer,
@@ -32,15 +34,31 @@ from .serializers import (
     ContactMessageSerializer,
     AccoladeSerializer,
     HeroTypingTextSerializer,
-    ExperienceYearCountSerializer,
+    SloganSerializer,
 )
 
 # ── API Views ──────────────────────────────────────────────
 
 
-class ExperienceYearCountListView(ListAPIView):
-    queryset = ExperienceYearCount.objects.all()
-    serializer_class = ExperienceYearCountSerializer
+class SloganView(APIView):
+    def get(self, request):
+        slogan = Slogan.objects.first()
+        serializer = SloganSerializer(slogan)
+        return Response(serializer.data)
+
+
+class MessageDisplayView(generics.RetrieveAPIView):
+    serializer_class = MessageDisplaySerializer
+
+    def get_object(self):
+        return MessageDisplay.objects.first()
+
+
+class MessageDisplayView(generics.RetrieveAPIView):
+    serializer_class = MessageDisplaySerializer
+
+    def get_object(self):
+        return MessageDisplay.objects.first()
 
 
 class ProfileView(RetrieveAPIView):

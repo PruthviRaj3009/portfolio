@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { ChevronDown, Download, Eye } from "lucide-react";
 import { motion } from "motion/react";
-import { useProfile, useHeroTypingText } from "../../hooks/usePortfolioData";
+import {
+  useProfile,
+  useHeroTypingText,
+  useSlogan,
+  useMessageDisplay,
+} from "../../hooks/usePortfolioData";
 
 function useTypingEffect(strings: string[]) {
   const [text, setText] = useState("");
@@ -166,7 +171,13 @@ function OrbSphere() {
             userSelect: "none",
           }}
         >
-          e<sup>iπ</sup> + 1 = 0
+          <p>
+            {useSlogan().data?.text || (
+              <>
+                e<sup>iπ</sup> + 1 = 0
+              </>
+            )}
+          </p>
         </div>
       </motion.div>
       <motion.div
@@ -204,7 +215,7 @@ export function Hero() {
   const { data: profile } = useProfile();
   const { data: heroTexts } = useHeroTypingText();
   const resumeLink = profile?.resume_url;
-
+  const messageDisplay = useMessageDisplay().data;
   // stable fallback while loading from API
   const typingStrings =
     heroTexts && heroTexts.length > 0
@@ -250,7 +261,7 @@ export function Hero() {
                 fontFamily: "'JetBrains Mono', monospace",
               }}
             >
-              &gt; Available for hire
+              {messageDisplay?.available ?? "Available for hire"}
             </div>
 
             {/* Name */}

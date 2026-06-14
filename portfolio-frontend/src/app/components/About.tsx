@@ -5,8 +5,8 @@ import {
   useProjects,
   useCertificates,
   useSkills,
-  useExperienceYearCounts,
   useHeroTypingText,
+  useMessageDisplay,
 } from "../../hooks/usePortfolioData";
 
 const floatingBadges = [
@@ -16,10 +16,11 @@ const floatingBadges = [
 ];
 
 export function About() {
+  const { data: messageDisplay } = useMessageDisplay();
   const { data: profile } = useProfile();
   const { data: projects } = useProjects();
   const { data: certificates } = useCertificates();
-  const { data: experienceYearCounts } = useExperienceYearCounts();
+
   const { data: skills } = useSkills();
   const frameworkCount =
     skills?.filter((skill) => skill.category === "framework").length || 0;
@@ -35,7 +36,7 @@ export function About() {
   const stats = [
     { label: "Projects Done", value: `${projects?.length ?? 0}+` },
     { label: "Technologies", value: frameworkCount.toString() },
-    { label: "Experience", value: `${experienceYearCounts?.length ?? 0}+ Yrs` },
+    { label: "Experience", value: messageDisplay?.experience ?? "Fresher" },
     { label: "Certifications", value: `${certificates?.length ?? 0}+` },
   ];
 

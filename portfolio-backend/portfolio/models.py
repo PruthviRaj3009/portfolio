@@ -181,11 +181,25 @@ class HeroTypingText(models.Model):
         ordering = ["order"]
 
 
-class ExperienceYearCount(models.Model):
-    Startyear = models.DateField()  # "2020", "2021", "2022", "2023", "2024"
-    Endyear = models.DateField()  # "2020", "2021", "2022", "2023", "2024"
-    count = models.IntegerField(default=0)
-    # number of projects in that year
+class MessageDisplay(models.Model):
+    available = models.CharField(max_length=200)
+    experience = models.CharField(max_length=50)
+    notice_period = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.Startyear.year} - {self.Endyear.year}"
+        return self.available
+
+    class Meta:
+        ordering = ["id"]
+
+
+class Slogan(models.Model):
+    text = models.CharField(max_length=200)
+    order = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        ordering = ["order"]

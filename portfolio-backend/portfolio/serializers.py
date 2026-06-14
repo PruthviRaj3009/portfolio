@@ -11,20 +11,27 @@ from .models import (
     ContactMessage,
     Accolade,
     HeroTypingText,
-    ExperienceYearCount,
+    MessageDisplay,
+    Slogan,
 )
 
 
-class ExperienceYearCountSerializer(serializers.ModelSerializer):
+class MessageDisplaySerializer(serializers.ModelSerializer):
     class Meta:
-        model = ExperienceYearCount
-        fields = ["category", "year_count"]
+        model = MessageDisplay
+        fields = ["available", "experience", "notice_period"]
 
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = "__all__"
+
+
+class SloganSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Slogan
+        fields = ["text"]
 
 
 class ProjectSerializer(serializers.ModelSerializer):

@@ -9,7 +9,8 @@ import {
   Experience,
   Certificate,
   Accolade,
-  ExperienceYearCount,
+  MessageDisplay,
+  Slogan,
 } from "../types";
 import { api } from "../lib/api";
 
@@ -31,7 +32,7 @@ function useFetch<T>(fetchFn: () => Promise<T>) {
 
 // Individual hooks for each section
 export const useProfile = () => useFetch<Profile>(portfolioService.getProfile);
-
+export const useSlogan = () => useFetch<Slogan>(portfolioService.getSelection);
 export const useProjects = () =>
   useFetch<Project[]>(portfolioService.getProjects);
 
@@ -54,5 +55,5 @@ export const useHeroTypingText = () =>
     portfolioService.getHeroTexts(),
   );
 
-export const useExperienceYearCounts = () =>
-  useFetch<ExperienceYearCount[]>(portfolioService.getExperienceYearCounts);
+export const useMessageDisplay = () =>
+  useFetch<MessageDisplay>(portfolioService.getMessageDisplay);

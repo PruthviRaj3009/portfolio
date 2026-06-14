@@ -88,6 +88,11 @@ export interface Accolade {
   image: string | null;
   order: number;
 }
+export interface Slogan {
+  id: number;
+  text: string;
+  order: number;
+}
 
 export interface ContactForm {
   name: string;
@@ -96,7 +101,8 @@ export interface ContactForm {
   message: string;
 }
 
-export interface ExperienceYearCount {
-  category: string;
-  year_count: number;
+export interface MessageDisplay {
+  available: string;
+  experience: string;
+  notice_period: string;
 }

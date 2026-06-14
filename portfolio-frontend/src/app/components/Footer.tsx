@@ -1,4 +1,4 @@
-import { Github, Linkedin, Twitter, MessageCircle } from "lucide-react";
+import { Github, Linkedin, Twitter, MessageCircle, Code2 } from "lucide-react";
 import { useProfile } from "../../hooks/usePortfolioData";
 
 const navLinks = [
@@ -42,6 +42,11 @@ export function Footer() {
         ? `https://wa.me/${profile.whatsapp_number}`
         : undefined,
       label: "WhatsApp",
+    },
+    {
+      icon: <Code2 size={18} />,
+      href: profile?.leetcode_url,
+      label: "LeetCode",
     },
   ].filter((s) => s.href);
 
