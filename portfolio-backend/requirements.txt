@@ -7,3 +7,4 @@ whitenoise
 python-decouple
 django-axes
 psycopg2-binary
+dj-database-url

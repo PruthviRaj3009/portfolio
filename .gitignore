@@ -1,0 +1,38 @@
+# ── Environment files ─────────────────────────
+.env
+.env.*
+.env.local
+.env.production
+.env.development
+
+# ── Python / Django ───────────────────────────
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+media/
+staticfiles/
+*.egg-info/
+.Python
+
+# ── Node / Frontend ───────────────────────────
+node_modules/
+dist/
+.next/
+build/
+
+# ── Docker ────────────────────────────────────
+*.log
+
+# ── OS ────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE ───────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
