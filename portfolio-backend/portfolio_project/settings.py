@@ -104,7 +104,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://127.0.0.1:8080",
     # Render Frontend URL
-    "https://your-frontend.onrender.com",
+    "https://portfolio-olive-omega-40.vercel.app",
 ]
 
 # ── CSRF settings ─────────────────────────────────────────
@@ -116,7 +116,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://127.0.0.1:8080",
     # Render Frontend URL
-    "https://your-frontend.onrender.com",
+    "https://portfolio-olive-omega-40.vercel.app",
 ]
 
 # ── REST Framework settings ───────────────────────────────
